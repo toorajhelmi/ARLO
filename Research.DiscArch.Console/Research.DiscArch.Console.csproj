@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Research.DiscArch.ReqParsing\Research.DiscArch.ReqParsing.csproj" />
+    <ProjectReference Include="..\Research.DiscArch.TestData\Research.DiscArch.TestData.csproj" />
+    <ProjectReference Include="..\Research.DiscArch.Services\Research.DiscArch.Services.csproj" />
+    <ProjectReference Include="..\Research.DiscArch.Designer\Research.DiscArch.Designer.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

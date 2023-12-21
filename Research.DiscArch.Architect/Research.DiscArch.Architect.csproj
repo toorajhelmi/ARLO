@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Research.DiscArch.Models\Research.DiscArch.Models.csproj" />
+    <ProjectReference Include="..\Research.DiscArch.TestData\Research.DiscArch.TestData.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="DecisionMaker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DecisionMaker.cs" Condition=" '$(EnableDefaultCompileItems)' == 'true' ">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,12 @@
+R1: The system must be engineered to ensure message delivery within a sub-second timeframe under standard operating conditions.
+R2: In scenarios of low bandwidth or high traffic, message delivery may exceed one second. However, the system must maintain chronological integrity, ensuring that messages are received in the same order they were sent, irrespective of the sender.
+R3: In situations where user activity is low, the system should utilize fewer servers to minimize operatinal costs.
+R4: The system must be robust enough to guarantee no loss of messages under any circumstances, ensuring complete message delivery reliability.
+R5: The system should automatically perform regular backups of message data to prevent data loss and ensure data recovery in case of system failures, aligning with the security and reliability aspects when the is not much requests.
+R6: The system's user interface must be intuitive and easy to navigate, enabling users to efficiently manage and access messages with minimal training, addressing usability.
+R7: The system must support seamless updates and maintenance without disrupting ongoing services, ensuring continuous operation and high maintainability if not explicitly disabled by the user.
+R8: The system should be capable of operating across different platforms and devices, ensuring high portability and accessibility for users on various systems.
+R9: The system must incorporate robust encryption for all messages to safeguard against unauthorized access and ensure data privacy, focusing on security if not explicitly disabled by the user.
+R10: The user interface should allow users to customize the color scheme and font size of the chat environment to enhance readability and personal preference.
+R11: The system must provide an option to mute notifications from specific users or groups, allowing users to manage their notification preferences.
+R12: The message search functionality should offer advanced filtering options, such as date range, sender, or keyword, to enable quick and efficient message retrieval.

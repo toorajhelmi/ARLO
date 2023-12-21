@@ -1,0 +1,39 @@
+R1. The system must handle varying loads and maintain performance, accommodating significant increases in user numbers and message volumes without compromising speed or reliability.
+
+R2. Designed to achieve consistently low message delivery times, typically under one second in normal operating conditions, ensuring prompt communication between users.
+
+R3. Capable of adapting to situations where traditional internet connectivity is unavailable, allowing for alternative methods of message relay to maintain uninterrupted service.
+
+R4. Must prioritize the protection of user data and privacy, ensuring all communications and personal information are securely stored and transmitted.
+
+R5. Users should be able to access their message history and account information without delays or loss of data.
+
+R6. It should allow for the addition of new features and services without significant restructuring or downtime.
+
+R7. It should be compatible with various cloud services, providing flexibility in hosting and operational scalability to accommodate growth and varying user demands.
+
+R8. It should allows for seamless data synchronization across different user devices, ensuring that messages and user settings are consistently updated in real-time.
+
+R9. It should supports integration with various external systems and applications, allowing for expanded functionality and interoperability with other services.
+
+R10. It should support deployment to different clouds not to go down when a cloud goes down.
+
+R11. Users should be able to send and receive messages either by typing, speaking, or scanning text.
+
+R12. The platform must support the sending and receiving of various media types, including images, videos, and audio messages.
+
+R13. The system should provide a means for users to search their message history, enabling them to find specific messages or conversations quickly.
+
+R14. Users need to be able to customize notification settings, including the ability to mute or customize alerts for specific conversations or contacts.
+
+R15. The platform should allow users to create and manage groups for group messaging, including adding or removing members and setting group preferences.
+
+R16. It must support end-to-end encryption for all messages, ensuring that communications are secure and cannot be intercepted or read by unauthorized parties.
+
+R17. Users should be able to access the messaging platform from multiple devices, with the system ensuring consistency in message history and account settings across devices.
+
+R18. The platform must be able to handle messages sent during periods of no internet connectivity, storing them and sending them once connectivity is restored.
+
+R19. The system should provide support for various languages, allowing users to send and receive messages in their preferred language.
+
+R20. Users should have the ability to block or report other users, providing a mechanism to prevent unwanted communication and enhance safety.

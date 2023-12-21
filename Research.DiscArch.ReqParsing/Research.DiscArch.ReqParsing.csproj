@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Research.DiscArch.TestData\Research.DiscArch.TestData.csproj" />
+    <ProjectReference Include="..\Research.DiscArch.Models\Research.DiscArch.Models.csproj" />
+    <ProjectReference Include="..\Research.DiscArch.Services\Research.DiscArch.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <WarningLevel></WarningLevel>
+    <WarningLevel>7</WarningLevel>
+  </PropertyGroup>
+</Project>
