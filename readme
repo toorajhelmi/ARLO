@@ -1,0 +1,14 @@
+DiscArch Project
+Overview
+DiscArch is a C# project that automates the translation of software requirements into architectural decisions. It leverages GPT-4 for parsing requirements and an ILP-based optimizer for decision-making.
+
+Components
+RequirementParser: Parses natural language requirements into structured ASRs.
+Architect: Generates architectural policies based on the parsed ASRs.
+Usage
+Clone the repository.
+Install required dependencies.
+Run CategorizedReqsExperiment with desired system settings.
+View output in designated reporting format.
+Contributing
+Contributions are welcome. Please read the contributing guide for guidelines.
