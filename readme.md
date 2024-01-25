@@ -1,7 +1,7 @@
-# DiscArch Project
+# ARLO Project
 
 ## Overview
-DiscArch is a C# project focused on converting software requirements into architectural decisions. Utilizing GPT-4 for parsing and an ILP-based optimizer for decision-making, it streamlines the architectural design process.
+ARLO is a C# project focused on converting software requirements into architectural decisions. Utilizing GPT-4 for parsing and an ILP-based optimizer for decision-making, it streamlines the architectural design process.
 
 ## Key Components
 - **RequirementParser**: Parses natural language requirements into ASRs.
