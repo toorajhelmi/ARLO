@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Formats.Asn1;
-using System.Globalization;
-using System.Xml.Serialization;
+﻿using System.Globalization;
 using CsvHelper;
 using Research.DiscArch.Models;
 
@@ -11,23 +8,27 @@ public enum SystemNames
 {
     Messaging,
     Kaggle,
-    Contradictory
+    Contradictory,
+    AppFlowy,
+    MLonBL,
+    SmallMessagingSystem,
+    OfficerDispatcher
 }
 public class ResourceManager
 {
     public static string LoadRequirments(SystemNames systemName)
     {
-        switch (systemName)
+        return systemName switch
         {
-            case SystemNames.Messaging:
-                return LoadFromTextFile("MessagingReqs.txt");
-            case SystemNames.Kaggle:
-                return LoadFromTextFile("KaggleReq.txt");
-            case SystemNames.Contradictory:
-                return LoadFromTextFile("ContradictoryReqs.txt");
-            default:
-                throw new Exception("System not found");
-        }
+            SystemNames.Messaging => LoadFromTextFile("MessagingReqs.txt"),
+            SystemNames.Kaggle => LoadFromTextFile("KaggleReq.txt"),
+            SystemNames.Contradictory => LoadFromTextFile("ContradictoryReqs.txt"),
+            SystemNames.AppFlowy => LoadFromTextFile("AppFlowy.txt"),
+            SystemNames.MLonBL => LoadFromTextFile("MLonBL.txt"),
+            SystemNames.OfficerDispatcher => LoadFromTextFile("OfficerDispatcher.txt"),
+            SystemNames.SmallMessagingSystem => LoadFromTextFile("SmallMessagingSystem.txt"),
+            _ => throw new Exception("System not found"),
+        };
     }
 
     public static Matrix LoadArchPattenMatrix(string filePath = "quality_archipattern_matrix.csv")

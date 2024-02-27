@@ -31,7 +31,7 @@ public class Requirement
     public bool IsNFR { get; set; }
     public List<string> QualityAttributes { get; set; } = new();
     public string ConditionText { get; set; }
-    public string ConditionType { get; set; }
+    //public string ConditionType { get; set; }
     public Condition Condition { get; set; }
     public List<MetricTrigger> MetricTriggers { get; set; } = new();
 }

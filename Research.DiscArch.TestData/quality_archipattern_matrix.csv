@@ -1,22 +1,36 @@
-Group,Pattern,Functional Suitability,Performance Efficiency,Compatibility,Usability,Reliability,Security,Maintainability,Portability
-Deployment,Monolith,1,0,-1,-1,0,1,1,1
-Deployment,Microservices,0,1,1,1,1,-1,-1,1
-Deployment,Peer-to-Peer,1,1,1,-1,0,-1,1,1
-Data Caching,Always On,0,0,1,0,0,-1,1,-1
-Data Caching,Offline First,0,-1,0,1,0,-1,-1,-1
-Communication,API-Call,-1,1,0,0,1,0,1,1
-Communication,Message-Based,1,-1,-1,-1,0,-1,-1,1
-Data Replication,Central,-1,1,1,1,-1,-1,-1,1
-Data Replication,Hot-Hot,1,0,1,1,1,-1,-1,0
-Data Replication,Hot-Cold,1,0,0,-1,0,-1,1,-1
-Database Management,SQL,1,-1,1,1,-1,-1,1,1
-Database Management,NoSQL,-1,1,0,1,1,1,1,1
-Database Management,Polyglot Persistence,0,0,-1,1,-1,0,0,0
-Security,Authentication and Authorization,-1,0,-1,1,1,-1,-1,1
-Security,Secure Communication,-1,0,1,1,0,-1,1,-1
-Security,Encryption,1,1,0,1,-1,0,0,0
-Resilience,Circuit Breaker,0,-1,0,-1,-1,-1,-1,0
-Resilience,Retry Policies,0,1,0,1,0,0,-1,0
-Resilience,Fallback Strategies,0,-1,0,-1,1,1,-1,1
-Data Synchronization,Real-time Synchronization,0,-1,-1,0,0,-1,0,1
-Data Synchronization,Batch Processing,1,1,-1,0,0,-1,1,1
+Group,Pattern,Performance Efficiency,Compatibility,Usability,Reliability,Security,Maintainability,Portability,Cost Efficiency
+Deployment,Monolith,0,0,0,-1,0,-1,0,1
+Deployment,Microservices,1,1,0,1,0,1,1,0
+Deployment,Peer-to-Peer,0,0,0,1,-1,-1,0,0
+Data Caching,Always On,-1,1,0,1,1,1,0,0,-1
+Data Caching,Offline First,1,0,1,1,-1,0,0,0
+Communication,API-Call,0,1,0,0,1,0,0,0
+Communication,Message-Based,0,1,0,1,0,1,0,0
+Communication,WebSocket,1,0,1,0,-1,-1,0,0
+Data Replication,Central,0,0,0,-1,0,0,0,1
+Data Replication,Hot-Hot,1,0,0,1,0,-1,0,-1
+Data Replication,Hot-Cold,0,0,0,1,0,0,0,0
+Database Management,SQL,0,1,0,0,0,0,0,0
+Database Management,NoSQL,1,1,0,1,0,-1,0,-1
+Security,Proactive,1,0,0,1,1,1,0,-1
+Security,Reactive,0,-1,0,0,-1,-1,-1,1
+Data Synchronization,Real-time Synchronization,1,0,1,0,0,-1,0,-1
+Data Synchronization,Batch Processing,0,0,-1,1,0,1,0,1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

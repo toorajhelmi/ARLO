@@ -11,7 +11,7 @@ public class GptService
     public GptService()
     {
         client = new HttpClient();
-        apiKey = "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";
+        apiKey = Environment.GetEnvironmentVariable("GptApiKey");
     }
 
     public async Task<string> Call(string instruction, string ask)
@@ -21,7 +21,7 @@ public class GptService
 
         var requestBody = new
         {
-            model = "gpt-3.5-turbo",
+            model = "gpt-4",
             messages = new[]
             {
                 new { role = "system", content = instruction },

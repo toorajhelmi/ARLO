@@ -1,0 +1,20 @@
+﻿R1.The application must integrate with a blockchain network, capable of handling smart contracts and transactions. 
+R2.The system requires the deployment and interaction with smart contracts, written in Solidity. 
+R3.Implement mechanisms for the validation and verification of data. This involves checking the accuracy and integrity of data used for training models.
+R4.An incentive system to reward contributors who provide accurate and valuable data is essential. This system should fairly distribute rewards, encouraging ongoing participation and quality contributions.
+R5.Support continuous training and updating of machine learning models with new data submissions. 
+R6.Efficiently manage Ethereum transactions, including the management of transaction fees and gas costs. 
+R7.When integrated with 3rd party frameworks or used from a UI, we expect a user-friendly interface for interaction, including data submission and model prediction requests. This interface should cater to users with varying levels of technical expertise.
+R8.When integrated with 3rd party frameworks or used from a UI, ensure the system is compatible with Python for backend processes and JavaScript for frontend interactions. 
+R9.When integrated with 3rd party frameworks or used from a UI, ensure compatibility with TensorFlow models for loading and inference. 
+R10.Must support both images and text for model training and prediction. 
+R11.Implement an adaptive learning rate for the provided model.
+R12.The system must be capable of hyper-tuning model parameters. 
+R13.Track performance metrics systematically for model validation and troubleshooting. 
+R14.Design the system architecture to be scalable to handle increasing data submissions and user interactions. 
+R15.Ensure the system complies with data privacy regulations when handling user-submitted data. 
+R16.Optimize computational and storage resources, particularly when interacting with the blockchain. 
+R17.Implement an automated testing framework to ensure the system's consistent performance. This framework should cover various aspects of the system, including smart contract functionality and machine learning model performance.
+R18.When integrated with 3rd party frameworks or used from a UI, must allow users to provide feedback on model predictions and system usability. 
+R19.Implement robust security measures to protect against unauthorized access and data breaches. 
+R20.Develop comprehensive error handling for blockchain transaction failures and data submission errors. 

@@ -1,0 +1,7 @@
+﻿R1. Under high system load, ensuring message delivery is paramount, even if it exceeds the usual delivery timeframe.
+R2. Under typical conditions, messages should be delivered within a few seconds.
+R3. In cases of slow connectivity, the system should make multiple delivery attempts to guarantee message receipt.
+R4. Messages can contain up to 1,000 characters.
+R5. The system should dynamically reduce resource usage to lower costs when there are fewer active users.
+R6. The system should autonomously implement necessary updates during periods of low activity.
+R7. Users must have the capability to delete their messages even after delivery.

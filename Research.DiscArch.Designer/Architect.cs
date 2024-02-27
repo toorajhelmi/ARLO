@@ -6,104 +6,219 @@ using Research.DiscArch.TestData;
 
 namespace Research.DiscArch.Designer;
 
+public enum QualityWeightsMode
+{
+    EquallyImportant,
+    AllRequired,
+    Inferred,
+    Provided
+}
+
 public class Architect
 {
-    private static Matrix qualityArchPatternmatrix = new Matrix();
+    private Matrix qualityArchPatternmatrix = new();
+    private IReportingService reportingService;
+    private ExperimentSettings experimentSettings;
+    private List<Requirement> requirements;
+    private List<ConditionGroup> conditionGroups = new();
+    private List<SatisfiableGroup> satisfiableGroups = new(); 
 
-    static Architect()
+    public Architect(IReportingService reportingService, ExperimentSettings experimentSettings, List<Requirement> requirements)
     {
+        this.reportingService = reportingService;
+        this.experimentSettings = experimentSettings;
+        this.requirements = requirements;
+
         qualityArchPatternmatrix = ResourceManager.LoadArchPattenMatrix();
-    }
 
-    public Architect()
-    {
-    }
+        Dictionary<string, int> qualityWeights = new();
 
-    public async Task<IEnumerable<Concern>> SelectArch(List<Requirement> requirements)
-    {
-        Console.WriteLine("Analyzing conditions ...");
-
-        var gptService = new GptService();
-        var instructions = "Task: Organize a provided set of conditions into distinct, non-contradictory groups. Once grouped, simply return the IDs of the conditions in each group enclosed in parentheses. For instance, if there are two groups where the first group includes requirements 1 and 3, and the second group includes requirements 3, your response should be formatted as ((1,2),(3)).\n" +
-            "1. It is possible that one condition is part of more than one group" +
-            "2. If a condition is applicable 'under any circumstances' or alway true include it in all groups";
-
-        var conditions = requirements.Where(r => !string.IsNullOrEmpty(r.ConditionText)).Select(r => new
+        if (experimentSettings.QualityWeightsMode == Enum.GetName(QualityWeightsMode.EquallyImportant))
         {
-            Id = requirements.IndexOf(r),
-            Condition = r.ConditionText
-        });
+            foreach (var column in qualityArchPatternmatrix.GetRows().First().Value)
+            {
+                qualityWeights[column.Key] = 1;
+            }
+        }
+        else if (experimentSettings.QualityWeightsMode == Enum.GetName(QualityWeightsMode.AllRequired))
+        {
 
-        Console.WriteLine("- Conditions:");
-        Console.WriteLine(JsonConvert.SerializeObject(conditions));
+        }
+        else if (experimentSettings.QualityWeightsMode == Enum.GetName(QualityWeightsMode.Inferred))
+        {
+            foreach (var requirement in requirements)
+            {
+                foreach (var quality in requirement.QualityAttributes)
+                {
+                    if (!qualityWeights.ContainsKey(quality))
+                        qualityWeights[quality] = 0;
+                    qualityWeights[quality]++;
+                }
+            }
+        }
+        else if (experimentSettings.QualityWeightsMode == Enum.GetName(QualityWeightsMode.Inferred))
+        {
+            //This will be handled within the optimizer for each group
+        }
+        else if (experimentSettings.QualityWeightsMode == Enum.GetName(QualityWeightsMode.Provided))
+        {
+            qualityWeights = experimentSettings.ProvidedQualityWeights;
+        }
+    }
 
-        var ask = $"Conditions: {JsonConvert.SerializeObject(conditions)}";
-        var response = await gptService.Call(instructions, ask);
-        var groups = ParseConditionResponse(response);
-
-        Console.WriteLine();
-        Console.WriteLine("- Uncontradictory Groups:");
-        Console.WriteLine(response);
-
+    public async Task<IEnumerable<Concern>> SelectArch()
+    {
         var concerns = new List<Concern>();
 
-        foreach (var ug in groups)
+        if (!experimentSettings.JustRunOptimization)
         {
-            var qualityAttrbutes = ug.SelectMany(g => requirements[g].QualityAttributes).Distinct().ToList();
+            await ConsolidateSimilarConditions();
+            await GenerateSatifiableGroups();
+        }
+        else
+        {
+            var desiredQAs = experimentSettings.ProvidedQualityWeights.Keys.ToList();
+            var concern = new Concern
+            {
+                Conditions = satisfiableGroups.SelectMany(sg => sg.ConditionGroups.Select(cg => cg.NominalCondition)).ToList(),
+                DesiredQualities = experimentSettings.ProvidedQualityWeights,
+                Decisions = SelectDecisions(experimentSettings.ProvidedQualityWeights).decision
+            };
+
+            concerns.Add(concern);
+        }
+
+        foreach (var satisfialeGroup in satisfiableGroups)
+        {
+            var qualityAttrbutes = satisfialeGroup.ConditionGroups.SelectMany(cg => cg.Requirements.SelectMany(r => r.QualityAttributes)).ToList();
+
+            var qualityWeights = new Dictionary<string, int>();
+
+            foreach (var quality in qualityAttrbutes)
+            {
+                if (!qualityWeights.ContainsKey(quality))
+                    qualityWeights[quality] = 0;
+                qualityWeights[quality]++;
+            }
 
             var concern = new Concern
             {
-                Conditions = ug.Select(g => requirements[g].ConditionText).ToList(),
-                DesiredQualities = qualityAttrbutes,
-                Decisions = SelectDecisions(qualityAttrbutes)
+                Conditions = satisfiableGroups.SelectMany(sg => sg.ConditionGroups.Select(cg => cg.NominalCondition)).ToList(),
+                DesiredQualities = qualityWeights,
+                Decisions = SelectDecisions(qualityWeights).decision
             };
-            concerns.Add(concern);
+            concerns.Add(concern);     
+        }
+
+        reportingService.Writeline();
+        reportingService.Writeline("Concerns");
+
+        foreach (var concern in concerns)
+        {
+            reportingService.Writeline($"Concern {concerns.IndexOf(concern)}\n");
+            reportingService.Writeline(concern.ToString());
+            reportingService.Writeline();
         }
 
         return concerns;
     }
 
-    public static List<Decision> SelectDecisions(List<string> desiredQualities)
+    public (List<Decision> decision, Dictionary<string, int> satisfactionScores) SelectDecisions(Dictionary<string, int> desiredQualities, OptimizerMode optimizerMode = OptimizerMode.ILP)
     {
-        var decisions = new List<Decision>();
+        //Make weights a percentage
+        var totalWeight = desiredQualities.Sum(kv => kv.Value);
 
-        foreach (var group in qualityArchPatternmatrix.RowGroups.GroupBy(kv => kv.Value).Select(g => g.Key))
+        foreach (var kv in desiredQualities)
         {
-            var decision = new Decision { ArchPatternName = group, Score = int.MinValue };
-            decisions.Add(decision);
+            desiredQualities[kv.Key] = kv.Value * 100 / totalWeight;
+        }
 
-            foreach (var row in qualityArchPatternmatrix.GetRowsByGroup(group))
+        Console.WriteLine("Finding optimal solution ...");
+
+        Optimizer optimizer = new();
+        var solution = optimizer.Optimize(optimizerMode, desiredQualities.Keys.ToList(), qualityArchPatternmatrix, desiredQualities);
+
+        reportingService.Writeline();
+        reportingService.Writeline("Optimal Solution");
+
+        if (solution.decision.Any())
+        {
+            reportingService.Writeline($"Optimal Solution Found! Overall Score (out of 100):{solution.satisfactionScores.Average(s => s.Value)}");
+            foreach (var score in solution.satisfactionScores.Where(kv => kv.Value != 0))
             {
-                var satisfiedQualities = new List<(string, int)>();
-                var unsatisfiedQualities = new List<(string, int)>();
-                int rowValue = 0;
+                reportingService.Writeline($"{score.Key}: {score.Value}, (weight: {desiredQualities[score.Key]})");
+            }
+        }
+        else
+        {
+            reportingService.Writeline("No optimal Solution Found!");
+        }
 
-                foreach (var column in row.Value)
+        return solution;
+    }
+
+    private async Task ConsolidateSimilarConditions()
+    {
+        Console.WriteLine("Analyzing conditions ...");
+
+        var gptService = new GptService();
+        var instructions = "If the following conditions could mean the same thing or one can infer another or one can be considered a subset or another, return 'True' otherwise return 'False'. Just return True of False.";
+
+        foreach (var req in requirements)
+        {
+            if (!conditionGroups.Any())
+            {
+                var newGroup = new ConditionGroup { NominalCondition = req.ConditionText };
+                newGroup.Requirements.Add(req);
+                conditionGroups.Add(newGroup);
+            }
+            else
+            {
+                var equivalentGroupFound = false;
+
+                foreach (var group in conditionGroups)
                 {
-                    if (desiredQualities.Contains(column.Key))
+                    var ask = $"Condition 1: '{req.ConditionText}'\n " +
+                        $"Condition 2: '{group.NominalCondition}'";
+
+                    var response = await gptService.Call(instructions, ask);
+
+                    bool equivalent = response.ToLower().Contains("true");
+
+                    if (equivalent)
                     {
-                        rowValue += column.Value;
-                        if (column.Value > 0)
-                            satisfiedQualities.Add((column.Key, column.Value));
-                        else if (column.Value < 0)
-                            unsatisfiedQualities.Add((column.Key, column.Value));
+                        equivalentGroupFound = true;
+                        group.Requirements.Add(req);
                     }
                 }
 
-                if (rowValue > decision.Score)
+                if (!equivalentGroupFound)
                 {
-                    decision.Score = rowValue;
-                    decision.SelectedPattern = row.Key;
-                    decision.SatisfiedQualties = satisfiedQualities;
-                    decision.UnsatisfiedQualties = unsatisfiedQualities;
+                    var newGroup = new ConditionGroup { NominalCondition = req.ConditionText };
+                    newGroup.Requirements.Add(req);
+                    conditionGroups.Add(newGroup);
                 }
             }
-        }     
+        }
 
-        return decisions;
+        reportingService.Writeline();
+        reportingService.Writeline("Condition Groups:");
+        reportingService.Writeline(JsonConvert.SerializeObject(conditionGroups));
     }
 
-    private List<List<int>> ParseConditionResponse(string response)
+    private async Task GenerateSatifiableGroups()
+    {
+        var gptService = new GptService();
+        var instructions = "Task: Organize a provided set of conditions into distinct, non-contradictory groups. Once grouped, simply return the IDs of the conditions in each group enclosed in parentheses. For instance, if there are two groups where the first group includes requirements 1 and 3, and the second group includes requirements 3, your response should be formatted as ((1,2),(3)). Where the number indicate the id of the condition. Don't include the condition itself.\n" +
+            "1. It is possible that one condition is part of more than one group" +
+            "2. If a condition is applicable 'under any circumstances' or alway true include it in all groups";
+
+        var ask = $"Conditions: {JsonConvert.SerializeObject(conditionGroups.Select(cg => cg.NominalCondition))}";
+        var response = await gptService.Call(instructions, ask);
+        ParseConditionResponse(response);
+    }
+
+    private void ParseConditionResponse(string response)
     {
         var result = new List<List<int>>();
 
@@ -131,8 +246,21 @@ public class Architect
             result.Add(ids);
         }
 
-        return result;
-    }
+        for (int i = 0; i < result.Count; i++)
+        {
+            var satisfiableGroup = new SatisfiableGroup();
 
+            foreach (var cgIndex in result[i])
+            {
+                satisfiableGroup.ConditionGroups.Add(conditionGroups.ElementAt(cgIndex - 1));
+            }
+
+            satisfiableGroups.Add(satisfiableGroup);
+        }
+
+        reportingService.Writeline();
+        reportingService.Writeline("- Satisfiables Groups:");
+        reportingService.Writeline(JsonConvert.SerializeObject(satisfiableGroups));
+    }
 }
 

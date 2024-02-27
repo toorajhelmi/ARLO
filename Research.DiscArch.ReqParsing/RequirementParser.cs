@@ -12,7 +12,13 @@ public class MetricTriggerData
 
 public class RequirementParser
 {
+    private IReportingService reportingService; 
     public List<Requirement> Requirements { get; set; } = new();
+
+    public RequirementParser(IReportingService reportingService)
+    {
+        this.reportingService = reportingService;
+    }
 
     public void LoadFromText(string text)
     {
@@ -30,23 +36,26 @@ public class RequirementParser
 
     public async Task Parse()
     {
+        if (!Requirements.Any())
+            return;
+        Console.WriteLine("Parsing Requirements ...");
+
         var gptService = new GptService();
         var architecturalRequirements = new List<Requirement>();
 
-        var instructions = "I provide a set of software requirements. I want you to extract the information below and return a json arraty of Requirment class provide below.\n" +
-            "1. Whether it is architecturally significant or not (Architecturally signficant means stating exlicity or implicity a statement about one or more of these quality attrbitues:\n" +
-            "Efficiency: Economic resource utilization.\n" +
-            "Compatibility: Interoperability and co - existence​​.\n" +
-            "Usability: Usable by different users easily.\n" +
-            "Reliability: Stability under different conditions​​.\n" +
-            "Security: Protecting data, preventing breaches​​.\n" +
-            "Maintainability: Easy to modify and improve​​​​.\n\n" +
-            "Portability: Adaptable to different environments​.\n\n" +
-            "2. Find the quality attributes mentinoed from the list above." +
-            "3. The condition - if any - that should be satisfied when the quality attrbiutes are expected. Condition could be a condtional statement, e.g., 'if bandwidth is low' or stated as a system state e.g., 'under normal conditions' or 'all the time'\n" +
-            "3.A. ConditionText: The conditon statement (if there is no condition return N/A\n" +
-            "3.B. ConditionType: Specify whether the condition is a 'Level' (static value) or 'Rate' (dynamic change)\n\n" +
-            "public class Requirement { public int Id { get; set; } public bool IsArchitecturallySignificant { get; set; } public List<string> QualityAttributes { get; set; } = new(); public string ConditionText { get; set; } public string ConditionType { get; set; }}";
+        var instructions = "I have provided a set of software requirements. I want you to extract the following information and return a JSON array of the Requirement class provide below.\n" +
+            "1.Whether it is architecturally significant or not (Architecturally significant means stating explicitly or inferring implicitly a statement about one or more of these quality attributes:\n" +
+            "-Performance Efficiency: Achieving high performance under economic resource utilization.\n" +
+            "-Compatibility: Interoperability and co-existence​​.\n" +
+            "-Usability: A user-friendly app with straightforward and elegant UX and UI.\n" +
+            "-Reliability: Stability under different conditions​​.\n" +
+            "-Security: Protecting data, preventing breaches​​.\n" +
+            "-Maintainability: Easy to modify and improve​​​​.\n" +
+            "-Portability: Adaptable to different environments​.\n" +
+            "-Cost Efficiency: Keep the overall cost (including development, operations, and maintenance) as low as possible\n" +
+            "2. Find the quality attributes mentinoed from the list above. (do not include anything outside of the above list.)\n" +
+            "3. The ConditionText is a conditional statement provided in the requirement that should be true when the quality attributes are expected, e.g., 'if bandwidth is low', or 'when traffic is high' or 'under normal conditions' or 'all the time'. (if there is no condition return N/A\n" +       
+            "public class Requirement { public int Id { get; set; } public bool IsArchitecturallySignificant { get; set; } public List<string> QualityAttributes { get; set; } = new(); public string ConditionText { get; set; }}";
 
         var reqs = new StringBuilder();
         int index = 1;
@@ -58,6 +67,7 @@ public class RequirementParser
         }
 
         var response = await gptService.Call(instructions, reqs.ToString());
+        File.WriteAllText("reqsJson.json", response);
 
         try
         {
@@ -66,7 +76,6 @@ public class RequirementParser
             {
                 var requirement = Requirements.First(r => r.Id == parsedReq.Id);
                 requirement.ConditionText = parsedReq.ConditionText;
-                requirement.ConditionType = parsedReq.ConditionType;
                 requirement.IsArchitecturallySignificant = parsedReq.IsArchitecturallySignificant;
                 requirement.QualityAttributes = parsedReq.QualityAttributes;
                 requirement.Parsed = true;
@@ -84,6 +93,8 @@ public class RequirementParser
 
     private async Task ParseConditions()
     {
+        Console.WriteLine("Parsing conditions ...");
+
         var gptService = new GptService();
 
         var metricInstruction = "Extract list of metrics for each condition in the provided list (e.g., 'user numbers', 'bandwidth') and the value or quality specified for them ((e.g., 'increases significantly', 'below 50MB/S')\nReturn: Just return a json array of MetricTriggerData where MetricTriggerData is defined as below:\n public class MetricTriggerData { public int Id { get; set; } public List<MetricTrigger> Triggers { get; set; }}\n\npublic class MetricTrigger { public string Metric { get; set; } public string Trigger { get; set; }}";

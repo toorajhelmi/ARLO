@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Research.DiscArch.Models
+﻿namespace Research.DiscArch.Models
 {
     public class Matrix
     {

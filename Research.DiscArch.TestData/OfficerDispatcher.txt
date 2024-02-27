@@ -1,0 +1,30 @@
+﻿R1. The system shall allow officers to report their status (e.g., available, busy, on break).
+R2. The dispatch system must deliver sub-second response times to ensure officers receive updates and dispatch orders promptly.
+R3. The system must function without interruption, providing continuous service even in adverse network conditions.
+R4. Officers shall be able to receive and acknowledge dispatch orders through the system.
+R5. The user interface should be intuitive and straightforward, allowing officers to log incidents and request support quickly without extensive training.
+R6. The system should optimize resource allocation to reduce operational costs without compromising service quality.
+R7. The system shall enable officers to record audio statements and take notes within the incident report feature.
+R8. The system shall provide a map interface displaying the locations of incidents and dispatched officers.
+R9. The system must implement end-to-end encryption to protect sensitive dispatch information in transit and at rest.
+R10. It should dynamically scale resources to accommodate the fluctuating number of active officers and incidents, ensuring consistent R1. performance without overuse of resources.
+R11. Backup and recovery procedures must be robust to prevent data loss and ensure system reliability in case of failures.
+R12. Officers can directly attach photos and videos to their incident reports through the system interface.
+R13. The system should offer streamlined workflows for common tasks such as reporting incidents, requesting backup, and accessing case R1. information.
+R14. It must utilize cloud services and scalable infrastructure to adjust to budget constraints while maintaining high service levels.
+R15. The system shall maintain a log of all dispatch communications and actions taken by officers for accountability and review.
+R16. Officers shall be able to access a database of local laws and regulations through the system for reference during patrols.
+R17. Regular security audits and updates are required to address new vulnerabilities and ensure the system's integrity.
+R18. The system must process and analyze incident data efficiently to provide timely and relevant information to officers in the field.
+R19. It should ensure data integrity and accurate incident reporting across all devices, even when switching between online and offline modes.
+R20. Officers should be able to customize their dashboard to access the most relevant information quickly.
+R21. The system shall offer a secure messaging feature for officers to communicate with the dispatch center and other officers.
+R22. The data synchronization process should minimize network usage to reduce costs associated with data transmission, especially in areas with R1. higher charges.
+R23. The system must operate securely even when officers use public or unsecured networks.
+R24. During high-demand periods, such as public events or emergencies, the system's performance must remain stable to handle the increased load.
+R25. The system must reliably synchronize data across multiple devices and platforms so officers can access the most current information.
+R26. The system shall generate and send automated alerts to officers based on specific criteria such as incident proximity or expertise required.
+R27. The system must provide officers with clear, actionable notifications and alerts during critical situations.
+R28. The system shall provide officers access to historical data and analytics on past incidents and outcomes for informed decision-making.
+R29. Efficient device battery life and data storage should be considered to minimize the cost of hardware replacements and upgrade costs.
+R30. Data retention and deletion policies must comply with federal and state regulations to maintain the confidentiality and privacy of all information.

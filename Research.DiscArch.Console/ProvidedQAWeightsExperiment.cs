@@ -5,7 +5,7 @@ using Research.DiscArch.TestData;
 
 namespace Research.DiscArch.Console;
 
-public class CategorizedReqsExperiment
+public class ProvidedQAWeightsExperiment
 {
     public async void Run(SystemNames system)
     {
@@ -13,7 +13,16 @@ public class CategorizedReqsExperiment
         {
             SystemName = Enum.GetName(system),
             OptimizationStrategy = Enum.GetName(OptimizerMode.ILP),
-            QualityWeightsMode = Enum.GetName(QualityWeightsMode.Inferred)
+            QualityWeightsMode = Enum.GetName(QualityWeightsMode.Provided),
+            ProvidedQualityWeights = new Dictionary<string, int>
+            {
+                { "Performance Efficiency", 5 },
+                { "Reliability", 4 },
+                { "Usability", 6 },
+                { "Cost Efficiency", 6 },
+                { "Security", 5 },
+            },
+            JustRunOptimization = true
         };
 
         var reportingService = new FileReportingService();
@@ -55,17 +64,8 @@ public class CategorizedReqsExperiment
             }
         }
 
-        var concerns = (await new Architect(reportingService, experimentSettings, asr).SelectArch()).ToList();
-
-        reportingService.Writeline();
-        reportingService.Writeline("Concerns");
-
-        foreach (var concern in concerns)
-        {
-            reportingService.Writeline($"Concern {concerns.IndexOf(concern)}\n");
-            reportingService.Writeline(concern.ToString());
-            reportingService.Writeline();
-        }
+        asr.Add(new Requirement { QualityAttributes = experimentSettings.ProvidedQualityWeights.Keys.ToList() });
+        await new Architect(reportingService, experimentSettings, asr).SelectArch();
 
         System.Console.WriteLine("Done!");
         System.Console.ReadLine();

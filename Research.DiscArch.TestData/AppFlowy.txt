@@ -1,0 +1,18 @@
+﻿R1.AppFlowy is an open-source Notion alternative, emphasizing community contributions and collaboration in its development​
+R2.The platform emphasizes user control over data, indicating a requirement for data privacy and user autonomy in managing their information​
+R3.There is a focus on providing complete documentation and engaging with the community, suggesting a requirement for clear guidance and support for both users and contributors
+R4.AppFlowy offers self-hosting options, highlighting a need for flexible deployment and operation in varied environments
+R5.Regular updates and feature enhancements based on community feedback and technological advancements are a part of AppFlowy's approach, implying a need for an adaptable and evolving architecture​
+R6.Move features like markdown handling from Dart to Rust, indicating a focus on performance and efficiency.
+R7.Emphasis on unit testing for various components, such as Flutter Bloc, to ensure reliability and stability.
+R8.Implement features like resizable sidebars and fixing UI bugs, focusing on user experience.
+R9.Respond to user requests for new features like Ctrl+K for search, showing commitment to user-driven development.
+R10.Address various bugs, including UI issues and typos, to enhance the overall functionality and user experience.
+R11.Continuously update documentation and development scripts, ensuring ease of use and contribution for developers.
+R12.Support running AppFlowy on different platforms and environments, like Heroku, emphasizing the need for broad compatibility.
+R13.Emphasize rapid development and reducing setup time in the early stages of the project.
+R14.The architecture is designed to be flexible and evolve with changing requirements and new features.
+R15.Ensure a dependable system by defining a basic structure that avoids architectural oversights.
+R16.Accommodate growth, allowing for the addition of more detailed components and functionalities.
+R17.Foster uniformity in code and design patterns across the project for improved readability and maintainability.
+R18.Streamline the development process to save resources.
