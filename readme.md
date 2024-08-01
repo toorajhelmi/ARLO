@@ -9,10 +9,10 @@ ARLO is a C# project focused on converting software requirements into architectu
 
 ## How to Use
 1. **Clone the Repository**: Access the code on GitHub.
-2. **Install Dependencies**: Follow the setup instructions for necessary libraries and tools.
-3. **Execute `CategorizedReqsExperiment`**: Configure and run the experiment with your system preferences.
-4. **Review Output**: Analyze the generated architectural decisions.
+2. **Register your OpenAI Key**: See below.
+3. **Install Dependencies**: Follow the setup instructions for necessary libraries and tools.
+4. **Execute `CategorizedReqsExperiment`**: Configure and run the experiment with your system preferences.
+5. **Review Output**: Analyze the generated architectural decisions.
 
 ## Contributing
-Contributions are welcome! Please refer to our contributing guidelines for more information.
-
+Contributions are welcome! Please take a look at our contributing guidelines for more information.
