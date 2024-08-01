@@ -1,4 +1,4 @@
-﻿namespace Research.DiscArch.Designer
+﻿namespace Research.DiscArch.Models
 {
     public class SatisfiableGroup
 	{

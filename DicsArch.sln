@@ -15,6 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Research.DiscArch.TestData"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Research.DiscArch.Designer", "Research.DiscArch.Designer\Research.DiscArch.Designer.csproj", "{9E825E98-AA8D-449D-9E57-B3B86F288E77}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities-Docs", "Utilities-Docs", "{D58FC7BA-2EF4-4E73-B780-BC19EEBA432C}"
+	ProjectSection(SolutionItems) = preProject
+		clean-reqs.py = clean-reqs.py
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscArch.Stats", "DiscArch.Stats\DiscArch.Stats.csproj", "{4C7059D5-E93C-4025-89F7-034CE2E742C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +55,12 @@ Global
 		{9E825E98-AA8D-449D-9E57-B3B86F288E77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E825E98-AA8D-449D-9E57-B3B86F288E77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E825E98-AA8D-449D-9E57-B3B86F288E77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C7059D5-E93C-4025-89F7-034CE2E742C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C7059D5-E93C-4025-89F7-034CE2E742C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C7059D5-E93C-4025-89F7-034CE2E742C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C7059D5-E93C-4025-89F7-034CE2E742C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C7059D5-E93C-4025-89F7-034CE2E742C4} = {D58FC7BA-2EF4-4E73-B780-BC19EEBA432C}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,18 @@
+                                    PE	CO	US	RE	SE	MA	PO	CE
+Deployment	Monolith				1	0   	1	-1	1	0	-1	-1
+Deployment	Microservices       		0	1	-1	0	0	-1	1	0
+Deployment	Peer-to-Peer	    		-1	-1	0	1	-1	1	0	1
+Data Caching 	Always On 		-1	0	1	-1	1	-1	0	1
+Data Caching		Offline First		1	0	-1	1	-1	1	0	-1
+Communication	API-Call			-1	-1	1	0	1	1	-1	0
+Communication	Message-Based	0	0	0	1	-1	-1	1	0
+Communication	WebSocket      	 1	1	-1	-1	0	0	0	0
+Data Replication	Central     		-1	0	0	-1	0	1	0	1
+Data Replication	Hot-Hot    		 1	0	0	0	1	-1	0	-1
+Data Replication	Hot-Cold    		0	0	0	1	-1	0	0	0
+Database Management	SQL	        -1	1	0	-1	-1	1	0	1
+Database Management	NoSQL 	1	-1	0	1	1	-1	0	-1
+Security	Proactive				0	0	-1	0	1	1	0	-1
+Security	Reactive					0	0	1	0	-1	-1	0	1
+Data Synch 	Real-time Sync		1	0	1	-1	0	-1	1	-1
+Data Synch	Batch Processing		-1	0	-1	1	0	1	-1  	1

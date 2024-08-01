@@ -31,7 +31,19 @@ public class Requirement
     public bool IsNFR { get; set; }
     public List<string> QualityAttributes { get; set; } = new();
     public string ConditionText { get; set; }
+    public List<double> ConditionEmbeddings = new();
     //public string ConditionType { get; set; }
-    public Condition Condition { get; set; }
+    //public Condition Condition { get; set; }
     public List<MetricTrigger> MetricTriggers { get; set; } = new();
+    public int ConditionWordCount { get; set; }
+
+    public override string ToString()
+    {
+        return $"[{string.Join(',' , QualityAttributes)}]: {Description}";
+    }
+
+    public string ToShortString()
+    {
+        return $"R{Id}: [{string.Join(',', QualityAttributes)}]";
+    }
 }

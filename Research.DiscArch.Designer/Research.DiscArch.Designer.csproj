@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Research.DiscArch.Models\Research.DiscArch.Models.csproj" />
     <ProjectReference Include="..\Research.DiscArch.TestData\Research.DiscArch.TestData.csproj" />
     <ProjectReference Include="..\Research.DiscArch.Services\Research.DiscArch.Services.csproj" />
+    <ProjectReference Include="..\Research.DiscArch.ReqParsing\Research.DiscArch.ReqParsing.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

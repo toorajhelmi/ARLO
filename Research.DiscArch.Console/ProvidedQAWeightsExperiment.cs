@@ -11,7 +11,7 @@ public class ProvidedQAWeightsExperiment
     {
         var experimentSettings = new ExperimentSettings
         {
-            SystemName = Enum.GetName(system),
+            System = system,
             OptimizationStrategy = Enum.GetName(OptimizerMode.ILP),
             QualityWeightsMode = Enum.GetName(QualityWeightsMode.Provided),
             ProvidedQualityWeights = new Dictionary<string, int>
@@ -25,13 +25,13 @@ public class ProvidedQAWeightsExperiment
             JustRunOptimization = true
         };
 
-        var reportingService = new FileReportingService();
+        var reportingService = new FileReportingService(experimentSettings);
         reportingService.Writeline($"Date/Time: {DateTime.Now}");
         var reqs = ResourceManager.LoadRequirments(system);
 
         reportingService.Writeline();   
         reportingService.Writeline($"Settings:\n" +
-            $"System Name: {experimentSettings.SystemName}\n" +
+            $"System Name: {experimentSettings.ExpermentName}\n" +
             $"Optimization Strategy: {experimentSettings.OptimizationStrategy}\n" +
             $"Quality Weights Mode: {experimentSettings.QualityWeightsMode}");
 
@@ -42,7 +42,7 @@ public class ProvidedQAWeightsExperiment
         ReqParsing.RequirementParser parser = new(reportingService);
         parser.LoadFromText(reqs);
 
-        await parser.Parse();
+        await parser.Parse(experimentSettings);
 
         var asr = parser.Requirements.Where(r => r.Parsed && r.IsArchitecturallySignificant).ToList();
 

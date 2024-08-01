@@ -1,9 +1,6 @@
-﻿using System;
-using Research.DiscArch.Models;
-
-namespace Research.DiscArch.Designer
+﻿namespace Research.DiscArch.Models
 {
-	public class ConditionGroup
+    public class ConditionGroup
 	{
 		public string NominalCondition { get; set; }
 		public List<Requirement> Requirements { get; set; } = new();

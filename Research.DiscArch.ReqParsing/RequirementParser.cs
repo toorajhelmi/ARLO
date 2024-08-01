@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using Newtonsoft.Json;
 using Research.DiscArch.Models;
 using Research.DiscArch.Services;
@@ -12,6 +13,9 @@ public class MetricTriggerData
 
 public class RequirementParser
 {
+    private const int batchSize = 10;
+    public const string AnyCircumstancesCondition = "under any circumstances";
+
     private IReportingService reportingService; 
     public List<Requirement> Requirements { get; set; } = new();
 
@@ -34,18 +38,48 @@ public class RequirementParser
         }
     }
 
-    public async Task Parse()
+    public async Task Parse(ExperimentSettings experimentSettings)
     {
+        Console.WriteLine(">> Parsing Reqs ...");
+
+        var parsedFileName = $"{Enum.GetName<SystemNames>(experimentSettings.System)}-";
+
+        parsedFileName += (experimentSettings.OnlySelectAbsolutelySignficant ? "stringent" : "lax") + ".json";
+
+        if (experimentSettings.LoadReqsFromFile && File.Exists(parsedFileName))
+        {
+            Requirements.Clear();
+            Requirements.AddRange(JsonConvert.DeserializeObject<List<Requirement>>(File.ReadAllText(parsedFileName)));
+            ReportParsingStats(0);
+            return;
+        }
+
         if (!Requirements.Any())
             return;
-        Console.WriteLine("Parsing Requirements ...");
+
+        //Requirements = Requirements.Take(10).ToList();
+
+        Console.WriteLine($"Parsing {Requirements.Count} Requirements ...");
 
         var gptService = new GptService();
         var architecturalRequirements = new List<Requirement>();
 
-        var instructions = "I have provided a set of software requirements. I want you to extract the following information and return a JSON array of the Requirement class provide below.\n" +
-            "1.Whether it is architecturally significant or not (Architecturally significant means stating explicitly or inferring implicitly a statement about one or more of these quality attributes:\n" +
-            "-Performance Efficiency: Achieving high performance under economic resource utilization.\n" +
+        var instructions = "I have provided a set of software requirements. I want you to extract the following information and return a JSON array of the Requirement class provide below.\n";
+
+            if (experimentSettings.OnlySelectAbsolutelySignficant)
+        {
+            instructions += "1.Whether it is architecturally-significant. A requirement is Architecturally-significant if it satisfies both of these conditions:\n" +
+                "1. It explicitly states a key decision regarding high-level software architecture." +
+                "2. It specifies one or more of following quality attributes regarding software architecture:\n";
+        }
+        else
+        {
+            instructions += "I have provided a set of software requirements. I want you to extract the following information and return a JSON array of the Requirement class provide below.\n" +
+            "1.Whether it is architecturally-significant. Architecturally-significant means specifying one or more of following quality attributes regarding overall software architecture (is it not considered architecturally-significant if it is just about some aspect of the software not impacting its architecture):\n";
+            
+        }
+
+        instructions += "-Performance Efficiency: Achieving high performance under economic resource utilization.\n" +
             "-Compatibility: Interoperability and co-existence​​.\n" +
             "-Usability: A user-friendly app with straightforward and elegant UX and UI.\n" +
             "-Reliability: Stability under different conditions​​.\n" +
@@ -53,42 +87,65 @@ public class RequirementParser
             "-Maintainability: Easy to modify and improve​​​​.\n" +
             "-Portability: Adaptable to different environments​.\n" +
             "-Cost Efficiency: Keep the overall cost (including development, operations, and maintenance) as low as possible\n" +
-            "2. Find the quality attributes mentinoed from the list above. (do not include anything outside of the above list.)\n" +
-            "3. The ConditionText is a conditional statement provided in the requirement that should be true when the quality attributes are expected, e.g., 'if bandwidth is low', or 'when traffic is high' or 'under normal conditions' or 'all the time'. (if there is no condition return N/A\n" +       
+            "2. Find the quality attributes mentioned from the list above. (do not include anything outside of the above list.)\n" +
+            "3. The ConditionText is a conditional statement provided in the requirement that should be true when the quality attributes are expected, e.g., 'if bandwidth is low', or 'when traffic is high' or 'under normal conditions' or 'all the time'. (if there is no condition return N/A\n" +
             "public class Requirement { public int Id { get; set; } public bool IsArchitecturallySignificant { get; set; } public List<string> QualityAttributes { get; set; } = new(); public string ConditionText { get; set; }}";
 
-        var reqs = new StringBuilder();
         int index = 1;
 
-        foreach (var requirement in Requirements)
-        {
-            reqs.AppendLine($"{requirement.Id}: {requirement.Description}");
-            index++;
-        }
+        var stopWatch = Stopwatch.StartNew();
+        stopWatch.Start();
 
-        var response = await gptService.Call(instructions, reqs.ToString());
-        File.WriteAllText("reqsJson.json", response);
-
-        try
+        while (index <= Requirements.Count)
         {
-            var parsedReqs = JsonConvert.DeserializeObject<List<Requirement>>(response);
-            foreach (var parsedReq in parsedReqs)
+            var reqs = new StringBuilder();
+
+            Console.WriteLine($"Parsing reqs {index} to {index + batchSize - 1} ...");
+            foreach (var requirement in Requirements.Skip(index - 1).Take(batchSize))
             {
-                var requirement = Requirements.First(r => r.Id == parsedReq.Id);
-                requirement.ConditionText = parsedReq.ConditionText;
-                requirement.IsArchitecturallySignificant = parsedReq.IsArchitecturallySignificant;
-                requirement.QualityAttributes = parsedReq.QualityAttributes;
-                requirement.Parsed = true;
-
-                if (requirement.ConditionText == "" || requirement.ConditionText == "N/A")
-                    requirement.ConditionText = "under any circumstances";
+                //It the requirement is too long we only take 500 chars to avoid getting over the GPT token limits
+                reqs.AppendLine(requirement.Description.Substring(0, int.Min(500, requirement.Description.Length)));
+                index++;
             }
-            await ParseConditions();
+
+            try
+            {
+                var response = await gptService.Call(instructions, reqs.ToString());
+                var parsedReqs = JsonConvert.DeserializeObject<List<Requirement>>(response);
+                foreach (var parsedReq in parsedReqs)
+                {
+                    var requirement = Requirements.First(r => r.Id == parsedReq.Id);
+                    requirement.ConditionText = parsedReq.ConditionText;
+                    requirement.IsArchitecturallySignificant = parsedReq.IsArchitecturallySignificant;
+                    requirement.QualityAttributes = parsedReq.QualityAttributes;
+                    requirement.Parsed = true;
+
+                    if (requirement.ConditionText == "" || requirement.ConditionText == "N/A")
+                        requirement.ConditionText = AnyCircumstancesCondition;
+                }
+                //await ParseConditions();
+
+                Console.WriteLine($"--> ASR Count (so far): {Requirements.Count(r => r.IsArchitecturallySignificant)}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"!!! ERROR Pasing Req !!!\n{e.Message}");
+            }
         }
-        catch (Exception e)
-        {
-            Console.WriteLine("!!! ERROR !!!: " + e.Message);
-        }
+
+        stopWatch.Stop();
+        ReportParsingStats(stopWatch.ElapsedMilliseconds);
+
+        File.WriteAllText(parsedFileName, JsonConvert.SerializeObject(Requirements));
+    }
+
+    private void ReportParsingStats(long parsingTime)
+    {
+        reportingService.RecordStat("# Requirements", Requirements.Count);
+        reportingService.RecordStat("Requirements with conditions", Requirements.Count(r => r.ConditionText != AnyCircumstancesCondition));
+        reportingService.RecordStat("# ASR", Requirements.Count(r => r.IsArchitecturallySignificant));
+        reportingService.RecordStat("Parsing Requirements", parsingTime);
+        reportingService.WriteStats();
     }
 
     private async Task ParseConditions()
@@ -103,10 +160,12 @@ public class RequirementParser
             .Where(r => r.ConditionText != null)
             .Select(r => $"{r.Id}: {r.ConditionText}"));
 
+        var response = "";
+
         try
         {
             ask = $"Conditions:\n {ask}";
-            var response = await gptService.Call(metricInstruction, ask);
+            response = await gptService.Call(metricInstruction, ask);
 
             if (!response.StartsWith('['))
                 response = $"[{response}]";
@@ -124,7 +183,7 @@ public class RequirementParser
         }
         catch (Exception e)
         {
-            Console.WriteLine("!!! ERROR !!!: " + e.Message);
+            Console.WriteLine($"!!! ERROR Parsing Condition !!!:\n{e.Message}\n{response}");
         }
     }
 }
