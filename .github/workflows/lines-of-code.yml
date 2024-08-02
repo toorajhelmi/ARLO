@@ -15,11 +15,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Count Lines of Code
-      id: lines-of-code
-      uses: davidahouse/loc@v1.2
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        node-version: '14'
 
-    - name: Output Lines of Code
-      run: echo ${{ steps['lines-of-code'].outputs.lines }}
+    - name: Install cloc
+      run: npm install -g cloc
+
+    - name: Count Lines of Code
+      run: cloc --vcs=git
