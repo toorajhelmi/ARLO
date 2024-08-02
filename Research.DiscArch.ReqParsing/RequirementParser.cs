@@ -74,8 +74,7 @@ public class RequirementParser
         }
         else
         {
-            instructions += "I have provided a set of software requirements. I want you to extract the following information and return a JSON array of the Requirement class provide below.\n" +
-            "1.Whether it is architecturally-significant. Architecturally-significant means specifying one or more of following quality attributes regarding overall software architecture (is it not considered architecturally-significant if it is just about some aspect of the software not impacting its architecture):\n";
+            instructions += "Whether it is architecturally-significant. Architecturally-significant means specifying one or more of following quality attributes regarding overall software architecture (is it not considered architecturally-significant if it is just about some aspect of the software not impacting its architecture):\n";
             
         }
 

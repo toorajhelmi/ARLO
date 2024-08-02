@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities-Docs", "Utilities-Docs", "{D58FC7BA-2EF4-4E73-B780-BC19EEBA432C}"
 	ProjectSection(SolutionItems) = preProject
 		clean-reqs.py = clean-reqs.py
+		DiscArch.Stats\code-stats.py = DiscArch.Stats\code-stats.py
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscArch.Stats", "DiscArch.Stats\DiscArch.Stats.csproj", "{4C7059D5-E93C-4025-89F7-034CE2E742C4}"
