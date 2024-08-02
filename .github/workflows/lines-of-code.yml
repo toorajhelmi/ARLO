@@ -1,0 +1,21 @@
+name: Count Lines of Code
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  count-lines:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Count Lines of Code
+      uses: github/loc@v2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
