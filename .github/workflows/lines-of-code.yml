@@ -22,4 +22,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Output Lines of Code
-      run: echo "Total lines of code: ${{ steps.lines-of-code.outputs.lines }}"
+      run: echo ${{ steps['lines-of-code'].outputs.lines }}
