@@ -25,6 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{1EDB7F3E-5CFA-4B58-BD80-E296E688D893}"
 	ProjectSection(SolutionItems) = preProject
 		Appendix A.pdf = Appendix A.pdf
+		Appendix B.pdf = Appendix B.pdf
 	EndProjectSection
 EndProject
 Global
